@@ -1,2 +1,4 @@
+# Ignorar arquivos de dados e extratos
+*.csv
+*.json
 __pycache__/
-finance_data.json
