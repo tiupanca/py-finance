@@ -20,11 +20,26 @@ Este projeto foi construído para demonstrar conceitos fundamentais de lógica d
 - **Registro de Movimentações:** Adicione entradas e saídas com descrição e categoria.
 - **Persistência de Dados:** Histórico salvo em JSON.
 
+## ✨ Funcionalidades (v3.0 - Full CRUD)
+
+- **[C]reate:** Adição de transações com data automática e categorias.
+- **[R]ead:** Visualização de histórico detalhado e relatórios por categoria.
+- **[U]pdate:** Edição inteligente de registros existentes (com preservação de dados).
+- **[D]elete:** Remoção de registros por ID.
+- **Feedback Visual:** Interface colorida com `colorama` para melhor legibilidade.
+- **Persistência Local:** Armazenamento robusto em JSON.
+
 ## 🛠️ Tecnologias Utilizadas
 
 - **Linguagem:** [Python 3.10+](https://www.python.org/)
 - **Armazenamento:** JSON (JavaScript Object Notation)
 - **Bibliotecas Nativas:** `json` (manipulação de dados) e `os` (interação com o sistema operacional)
+
+## 🏗️ Arquitetura do Projeto
+
+O sistema foi refatorado seguindo princípios de **Separação de Responsabilidades**:
+- `finance.py`: Camada de Interface (View) - Lida com a interação com o usuário.
+- `database.py`: Camada de Dados (Model) - Lida com leitura, escrita e lógica de cálculo.
 
 ## 📦 Como Rodar o Projeto
 
@@ -34,17 +49,22 @@ Siga os passos abaixo para executar a aplicação em sua máquina local:
    Você pode verificar digitando `python --version` no seu terminal.
 
 2. **Clone este repositório:**
-   ```bash
-   git clone https://github.com/tiupanca/py-finance.git
+   
+   `git clone https://github.com/tiupanca/py-finance.git`
 
 
 3. **Acesse a pasta do projeto:**
-   ```bash
-   cd py-finance
+   
+   `cd py-finance`
 
-4. **Execute o programa:**
-   ```bash
-   python finance.py
+4. **Instale as dependências:**
+
+    `pip install colorama`
+
+5. **Execute o programa:**
+   
+   `python finance.py`
+
 ## 🧠 Aprendizados e Desafios
 
 Durante o desenvolvimento deste projeto, apliquei boas práticas de desenvolvimento:
