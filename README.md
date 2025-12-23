@@ -13,6 +13,13 @@ Este projeto foi construído para demonstrar conceitos fundamentais de lógica d
 - **Persistência de Dados:** Todos os dados são salvos em um arquivo `json`, permitindo que as informações sejam mantidas mesmo após fechar o programa.
 - **Listagem Detalhada:** Interface limpa para visualizar o histórico de transações categorizadas.
 
+## ✨ Funcionalidades (v2.0)
+
+- **Interface Colorida:** Uso da biblioteca `colorama` para feedback visual (Verde para receitas, Vermelho para despesas).
+- **Data e Hora Automática:** Registro preciso de quando cada transação foi realizada.
+- **Registro de Movimentações:** Adicione entradas e saídas com descrição e categoria.
+- **Persistência de Dados:** Histórico salvo em JSON.
+
 ## 🛠️ Tecnologias Utilizadas
 
 - **Linguagem:** [Python 3.10+](https://www.python.org/)
@@ -42,13 +49,13 @@ Siga os passos abaixo para executar a aplicação em sua máquina local:
 
 Durante o desenvolvimento deste projeto, apliquei boas práticas de desenvolvimento:
 
-    Modularização: Código dividido em funções específicas, facilitando a manutenção.
-
-    Tratamento de Erros: Uso de blocos try/except para lidar com entradas inválidas.
-
-    Trabalho com JSON: Conversão de dados Python para persistência local.
-
-    Git & GitHub: Fluxo de trabalho com commits organizados e README profissional.
+- **Modularização:**  Código dividido em funções específicas, facilitando a manutenção.
+- **Tratamento de Erros:**  Uso de blocos try/except para lidar com entradas inválidas.
+- **Trabalho com JSON:**  Conversão de dados Python para persistência local.
+- **Git & GitHub:**  Fluxo de trabalho com commits organizados e README profissional.
+- **Evolução de Software:** Como manter a compatibilidade de dados ao adicionar novas colunas em um sistema já existente.
+- **Experiência do Usuário (UX):** Uso de cores no terminal para facilitar a leitura de dados financeiros.
+- **Manipulação de Datas:** Uso da biblioteca `datetime` para formatação de logs.
 
 ## 👤 Autor
 
