@@ -28,6 +28,7 @@ Este projeto foi construído para demonstrar conceitos fundamentais de lógica d
 - **[D]elete:** Remoção de registros por ID.
 - **Feedback Visual:** Interface colorida com `colorama` para melhor legibilidade.
 - **Persistência Local:** Armazenamento robusto em JSON.
+- **Exportação de Dados:** Gera arquivos `.csv` formatados para abertura direta no Microsoft Excel ou Google Sheets (v5.0).
 
 ## 🛠️ Tecnologias Utilizadas
 

@@ -89,15 +89,24 @@ def update_item_ui(data):
     except (ValueError, IndexError):
         print(f"{Fore.RED}❌ Erro ao atualizar. Verifique os dados.")
 
+def export_ui(data):
+    print(f"\n{Fore.CYAN}--- Exportando Dados ---")
+    arquivo = database.export_to_csv(data)
+    if arquivo:
+        print(f"{Fore.GREEN}✅ Sucesso! Arquivo '{arquivo}' gerado na pasta do projeto.")
+        print(f"{Fore.WHITE}Agora você pode abri-lo diretamente no Excel ou Google Sheets.")
+    else:
+        print(f"{Fore.RED}❌ Erro ao exportar. Verifique se o histórico não está vazio.")
+
 def main():
     data = database.load_data()
     while True:
         saldo = database.get_balance(data)
         cor_saldo = Fore.GREEN if saldo >= 0 else Fore.RED
         
-        print(f"\n{Fore.BLUE}======= PY-FINANCE v4.0 =======")
+        print(f"\n{Fore.BLUE}======= PY-FINANCE v5.0 =======")
         print(f"SALDO ATUAL: {cor_saldo}R$ {saldo:.2f}")
-        print(f"{Fore.WHITE}1. Add | 2. Histórico | 3. Relatório | 4. Apagar | 5. Editar | 6. Sair")
+        print(f"{Fore.WHITE}1. Add | 2. Histórico | 3. Relatório | 4. Apagar | 5. Editar | 6. Exportar Excel | 7. Sair")
         
         choice = input(f"{Fore.YELLOW}Escolha: ")
         
@@ -106,7 +115,8 @@ def main():
         elif choice == "3": show_report(data)
         elif choice == "4": delete_item_ui(data)
         elif choice == "5": update_item_ui(data)
-        elif choice == "6": break
+        elif choice == "6": export_ui(data) # Nova opção!
+        elif choice == "7": break
 
 if __name__ == "__main__":
     main()

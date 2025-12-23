@@ -42,3 +42,23 @@ def update_transaction(data, index, new_transaction):
         return True
     except IndexError:
         return False
+    
+import csv
+
+def export_to_csv(data):
+    """Exporta as transações para um arquivo CSV compatível com Excel"""
+    if not data:
+        return False
+    
+    filename = "extrato_financeiro.csv"
+    # Definimos os títulos das colunas
+    fields = ["date", "description", "category", "amount"]
+    
+    try:
+        with open(filename, "w", newline="", encoding="utf-8-sig") as file:
+            writer = csv.DictWriter(file, fieldnames=fields, delimiter=";")
+            writer.writeheader()
+            writer.writerows(data)
+        return filename
+    except Exception:
+        return False
