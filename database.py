@@ -33,3 +33,12 @@ def delete_transaction(data, index):
         return True
     except IndexError:
         return False
+    
+def update_transaction(data, index, new_transaction):
+    """Substitui uma transação existente por uma nova"""
+    try:
+        data[index] = new_transaction
+        save_data(data)
+        return True
+    except IndexError:
+        return False
