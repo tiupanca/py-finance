@@ -23,3 +23,13 @@ def get_category_report(data):
         cat = t['category']
         report[cat] = report.get(cat, 0) + t['amount']
     return report
+
+def delete_transaction(data, index):
+    """Remove uma transação pelo índice e salva o ficheiro"""
+    try:
+        # Remove o item da lista
+        data.pop(index)
+        save_data(data)
+        return True
+    except IndexError:
+        return False

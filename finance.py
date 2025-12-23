@@ -26,14 +26,31 @@ def add_transaction(data):
         print(f"{Fore.RED}❌ Erro: Insira um número válido.")
 
 def list_transactions(data):
-    print(f"\n{Fore.YELLOW}--- HISTÓRICO ---")
+    print(f"\n{Fore.YELLOW}--- HISTÓRICO DETALHADO ---")
     if not data:
-        print("Vazio.")
+        print("Nenhuma transação encontrada.")
         return
-    for t in data:
-        data_t = t.get('date', '---')
+
+    # Usamos o enumerate para mostrar um número de 1 até o total de itens
+    for i, t in enumerate(data):
+        data_t = t.get('date', '   Antiga    ')
         cor = Fore.GREEN if t['amount'] > 0 else Fore.RED
-        print(f"{Fore.WHITE}{data_t} | {t['description'][:15]:<15} | {cor}{t['amount']:>8.2f}")
+        # O [i] mostra o índice para o utilizador saber o que apagar
+        print(f"{Fore.WHITE}[{i}] {data_t} | {t['description'][:15]:<15} | {cor}{t['amount']:>8.2f}")
+
+def delete_item_ui(data):
+    """Interface para apagar um item"""
+    list_transactions(data)
+    try:
+        idx = int(input(f"\n{Fore.YELLOW}Digite o número [id] para apagar (ou -1 para cancelar): "))
+        if idx == -1: return
+        
+        if database.delete_transaction(data, idx):
+            print(f"{Fore.GREEN}✅ Transação removida!")
+        else:
+            print(f"{Fore.RED}❌ ID não encontrado.")
+    except ValueError:
+        print(f"{Fore.RED}❌ Digite um número válido.")
 
 def show_report(data):
     print(f"\n{Fore.MAGENTA}--- RESUMO POR CATEGORIA ---")
@@ -48,9 +65,9 @@ def main():
         saldo = database.get_balance(data)
         cor_saldo = Fore.GREEN if saldo >= 0 else Fore.RED
         
-        print(f"\n{Fore.BLUE}======= PY-FINANCE v3.0 =======")
+        print(f"\n{Fore.BLUE}======= PY-FINANCE v3.1 =======")
         print(f"SALDO ATUAL: {cor_saldo}R$ {saldo:.2f}")
-        print(f"{Fore.WHITE}1. Adicionar | 2. Histórico | 3. Relatório | 4. Sair")
+        print(f"{Fore.WHITE}1. Add | 2. Histórico | 3. Relatório | 4. Apagar | 5. Sair")
         
         choice = input(f"{Fore.YELLOW}Escolha: ")
         
@@ -61,9 +78,11 @@ def main():
         elif choice == "3":
             show_report(data)
         elif choice == "4":
+            delete_item_ui(data)
+        elif choice == "5":
             break
         else:
-            print(f"{Fore.RED}Inválido!")
+            print(f"{Fore.RED}Opção inválida!")
 
 if __name__ == "__main__":
     main()
