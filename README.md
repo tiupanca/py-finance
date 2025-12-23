@@ -42,6 +42,11 @@ O sistema foi refatorado seguindo princípios de **Separação de Responsabilida
 - `finance.py`: Camada de Interface (View) - Lida com a interação com o usuário.
 - `database.py`: Camada de Dados (Model) - Lida com leitura, escrita e lógica de cálculo.
 
+
+**23/12/2025: (v4.0)**
+
+Implementação de Programação Orientada a Objetos (POO) para maior escalabilidade e organização.
+
 ## 📦 Como Rodar o Projeto
 
 Siga os passos abaixo para executar a aplicação em sua máquina local:
