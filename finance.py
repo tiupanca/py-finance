@@ -1,30 +1,15 @@
-import json
-import os
 from datetime import datetime
 from colorama import Fore, Style, init
+import database  # Importamos o nosso outro arquivo
 
-# Inicializa o colorama para funcionar no Windows e Linux
 init(autoreset=True)
-
-DATA_FILE = "finance_data.json"
-
-def load_data():
-    if not os.path.exists(DATA_FILE):
-        return []
-    with open(DATA_FILE, "r") as file:
-        return json.load(file)
-
-def save_data(data):
-    with open(DATA_FILE, "w") as file:
-        json.dump(data, file, indent=4)
 
 def add_transaction(data):
     try:
         print(f"\n{Fore.CYAN}--- Nova Transação ---")
         description = input("Descrição: ")
         amount = float(input("Valor (ex: 50.50 ou -20.00): "))
-        category = input("Categoria: ")
-        # Pega a data e hora atual formatada
+        category = input("Categoria: ").capitalize()
         date_now = datetime.now().strftime("%d/%m/%Y %H:%M")
         
         transaction = {
@@ -35,57 +20,50 @@ def add_transaction(data):
         }
         
         data.append(transaction)
-        save_data(data)
-        print(f"{Fore.GREEN}✅ Adicionado em {date_now}!")
+        database.save_data(data) # Chama a lógica do outro arquivo
+        print(f"{Fore.GREEN}✅ Registado com sucesso!")
     except ValueError:
-        print(f"{Fore.RED}❌ Erro: Valor inválido.")
-
-def show_balance(data):
-    total = sum(t['amount'] for t in data)
-    cor = Fore.GREEN if total >= 0 else Fore.RED
-    print(f"\n{cor}--- SALDO ATUAL: R$ {total:.2f} ---")
+        print(f"{Fore.RED}❌ Erro: Insira um número válido.")
 
 def list_transactions(data):
-    print(f"\n{Fore.YELLOW}--- HISTÓRICO DE TRANSAÇÕES ---")
+    print(f"\n{Fore.YELLOW}--- HISTÓRICO ---")
     if not data:
-        print("Nenhuma transação encontrada.")
+        print("Vazio.")
         return
-
-    for i, t in enumerate(data, 1):
-        # A MÁGICA ESTÁ AQUI: se não tiver 'date', ele usa '---'
-        data_transacao = t.get('date', '   Antiga    ')
-        
+    for t in data:
+        data_t = t.get('date', '---')
         cor = Fore.GREEN if t['amount'] > 0 else Fore.RED
-        simbolo = "+" if t['amount'] > 0 else ""
-        
-        # Formatando a exibição para ficar alinhada
-        desc = t['description'][:15].ljust(15)
-        cat = t['category'][:10].ljust(10)
-        
-        print(f"{Fore.WHITE}{data_transacao} | {desc} | {cat} | {cor}{simbolo}{t['amount']:.2f}")
+        print(f"{Fore.WHITE}{data_t} | {t['description'][:15]:<15} | {cor}{t['amount']:>8.2f}")
+
+def show_report(data):
+    print(f"\n{Fore.MAGENTA}--- RESUMO POR CATEGORIA ---")
+    report = database.get_category_report(data)
+    for cat, total in report.items():
+        cor = Fore.GREEN if total > 0 else Fore.RED
+        print(f"{Fore.WHITE}{cat:<15}: {cor}R$ {total:.2f}")
 
 def main():
-    data = load_data()
+    data = database.load_data()
     while True:
-        print(f"\n{Fore.BLUE}======= PY-FINANCE v2.0 =======")
-        print("1. Adicionar Transação")
-        print("2. Ver Saldo")
-        print("3. Listar Histórico")
-        print("4. Sair")
+        saldo = database.get_balance(data)
+        cor_saldo = Fore.GREEN if saldo >= 0 else Fore.RED
+        
+        print(f"\n{Fore.BLUE}======= PY-FINANCE v3.0 =======")
+        print(f"SALDO ATUAL: {cor_saldo}R$ {saldo:.2f}")
+        print(f"{Fore.WHITE}1. Adicionar | 2. Histórico | 3. Relatório | 4. Sair")
         
         choice = input(f"{Fore.YELLOW}Escolha: ")
         
         if choice == "1":
             add_transaction(data)
         elif choice == "2":
-            show_balance(data)
-        elif choice == "3":
             list_transactions(data)
+        elif choice == "3":
+            show_report(data)
         elif choice == "4":
-            print(f"{Fore.CYAN}Saindo e salvando dados...")
             break
         else:
-            print(f"{Fore.RED}Opção inválida!")
+            print(f"{Fore.RED}Inválido!")
 
 if __name__ == "__main__":
     main()
