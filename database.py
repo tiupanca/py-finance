@@ -62,3 +62,30 @@ def export_to_csv(data):
         return filename
     except Exception:
         return False
+    
+BUDGET_FILE = "budgets.json"
+
+def load_budgets():
+    """Carrega as metas de gastos ou retorna um dicionário vazio"""
+    if not os.path.exists(BUDGET_FILE):
+        return {}
+    with open(BUDGET_FILE, "r") as file:
+        return json.load(file)
+
+def save_budgets(budgets):
+    """Salva as metas no arquivo JSON"""
+    with open(BUDGET_FILE, "w") as file:
+        json.dump(budgets, file, indent=4)
+
+def check_budget_status(data, category):
+    """Retorna quanto já foi gasto e qual a meta para uma categoria"""
+    budgets = load_budgets()
+    meta = budgets.get(category)
+    
+    if meta is None:
+        return None  # Não há meta para essa categoria
+    
+    # Soma quanto já gastamos nessa categoria (apenas valores negativos/despesas)
+    gastos_atuais = sum(abs(t['amount']) for t in data if t['category'] == category and t['amount'] < 0)
+    
+    return {"gasto": gastos_atuais, "meta": meta}    

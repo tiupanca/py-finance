@@ -98,24 +98,80 @@ def export_ui(data):
     else:
         print(f"{Fore.RED}❌ Erro ao exportar. Verifique se o histórico não está vazio.")
 
+def set_budget_ui():
+    """Interface para definir metas"""
+    budgets = database.load_budgets()
+    print(f"\n{Fore.CYAN}--- Definir Metas de Gastos ---")
+    cat = input("Categoria (ex: Alimentação, Lazer): ").capitalize()
+    try:
+        limite = float(input(f"Limite mensal para {cat}: R$ "))
+        budgets[cat] = limite
+        database.save_budgets(budgets)
+        print(f"{Fore.GREEN}✅ Meta para {cat} definida: R$ {limite:.2f}")
+    except ValueError:
+        print(f"{Fore.RED}❌ Valor inválido.")
+
+def add_transaction(data):
+    try:
+        print(f"\n{Fore.CYAN}--- Nova Transação ---")
+        description = input("Descrição: ")
+        amount = float(input("Valor (ex: 50.50 ou -20.00): "))
+        category = input("Categoria: ").capitalize()
+        
+        # --- LÓGICA DE ALERTA DE META ---
+        if amount < 0: # Só verifica metas para despesas
+            status = database.check_budget_status(data, category)
+            if status:
+                total_apos_gasto = status['gasto'] + abs(amount)
+                if total_apos_gasto > status['meta']:
+                    print(f"\n{Fore.RED}⚠️ ALERTA DE ORÇAMENTO! ⚠️")
+                    print(f"Sua meta para {category} é R$ {status['meta']:.2f}")
+                    print(f"Com esse gasto, você chegará a R$ {total_apos_gasto:.2f}")
+                    input(f"{Fore.YELLOW}Pressione Enter para continuar mesmo assim ou Ctrl+C para cancelar...")
+        # --------------------------------
+        
+        date_now = datetime.now().strftime("%d/%m/%Y %H:%M")
+        transaction = {"description": description, "amount": amount, "category": category, "date": date_now}
+        
+        data.append(transaction)
+        database.save_data(data)
+        print(f"{Fore.GREEN}✅ Registrado!")
+    except ValueError:
+        print(f"{Fore.RED}❌ Erro: Insira um número válido.")
+
+def show_report(data):
+    print(f"\n{Fore.MAGENTA}--- RELATÓRIO E METAS ---")
+    report = database.get_category_report(data)
+    budgets = database.load_budgets()
+    
+    for cat, total in report.items():
+        meta = budgets.get(cat)
+        meta_str = f" / Meta: R$ {meta:.2f}" if meta else ""
+        
+        # Alerta visual no relatório
+        cor = Fore.GREEN if total > 0 else Fore.RED
+        if meta and abs(total) > meta and total < 0:
+            cor = Fore.LIGHTRED_EX # Vermelho brilhante se estourou
+            meta_str += " 🚨 (ESTOUROU!)"
+            
+        print(f"{Fore.WHITE}{cat:<15}: {cor}R$ {total:.2f}{Fore.WHITE}{meta_str}")
+
 def main():
     data = database.load_data()
     while True:
         saldo = database.get_balance(data)
         cor_saldo = Fore.GREEN if saldo >= 0 else Fore.RED
-        
-        print(f"\n{Fore.BLUE}======= PY-FINANCE v5.0 =======")
+        print(f"\n{Fore.BLUE}======= PY-FINANCE v5.1 =======")
         print(f"SALDO ATUAL: {cor_saldo}R$ {saldo:.2f}")
-        print(f"{Fore.WHITE}1. Add | 2. Histórico | 3. Relatório | 4. Apagar | 5. Editar | 6. Exportar Excel | 7. Sair")
+        print(f"{Fore.WHITE}1. Add | 2. Histórico | 3. Relatório | 4. Apagar | 5. Editar | 6. Metas | 7. Sair")
         
         choice = input(f"{Fore.YELLOW}Escolha: ")
-        
         if choice == "1": add_transaction(data)
         elif choice == "2": list_transactions(data)
         elif choice == "3": show_report(data)
         elif choice == "4": delete_item_ui(data)
         elif choice == "5": update_item_ui(data)
-        elif choice == "6": export_ui(data) # Nova opção!
+        elif choice == "6": set_budget_ui() # Nova opção
         elif choice == "7": break
 
 if __name__ == "__main__":
