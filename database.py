@@ -1,51 +1,82 @@
-import json
-import os
+import sqlite3
 import csv
+from datetime import datetime
 
 class FinanceDatabase:
-    def __init__(self, data_file="finance_data.json", budget_file="budgets.json"):
-        self.data_file = data_file
-        self.budget_file = budget_file
+    def __init__(self, db_name="finance.db"):
+        self.db_name = db_name
+        self.create_tables()
+
+    def connect(self):
+        return sqlite3.connect(self.db_name)
+
+    def create_tables(self):
+        """Cria as tabelas de transações e metas se não existirem"""
+        with self.connect() as conn:
+            cursor = conn.cursor()
+            # Tabela de Transações
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS transactions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    description TEXT NOT NULL,
+                    amount REAL NOT NULL,
+                    category TEXT NOT NULL,
+                    date TEXT NOT NULL
+                )
+            """)
+            # Tabela de Metas
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS budgets (
+                    category TEXT PRIMARY KEY,
+                    limit_amount REAL NOT NULL
+                )
+            """)
+            conn.commit()
+
+    def save_data(self, description, amount, category):
+        """Salva uma nova transação no SQL"""
+        date_now = datetime.now().strftime("%d/%m/%Y %H:%M")
+        with self.connect() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO transactions (description, amount, category, date) VALUES (?, ?, ?, ?)",
+                (description, amount, category, date_now)
+            )
+            conn.commit()
 
     def load_data(self):
-        if not os.path.exists(self.data_file):
-            return []
-        with open(self.data_file, "r") as file:
-            return json.load(file)
+        """Lê todas as transações do SQL"""
+        with self.connect() as conn:
+            conn.row_factory = sqlite3.Row # Permite acessar como dicionário
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM transactions ORDER BY id DESC")
+            rows = cursor.fetchall()
+            return [dict(row) for row in rows]
 
-    def save_data(self, data):
-        with open(self.data_file, "w") as file:
-            json.dump(data, file, indent=4)
+    def get_balance(self):
+        with self.connect() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT SUM(amount) FROM transactions")
+            res = cursor.fetchone()[0]
+            return res if res else 0.0
+
+    def save_budgets(self, category, limit_amount):
+        with self.connect() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT OR REPLACE INTO budgets (category, limit_amount) VALUES (?, ?)",
+                (category, limit_amount)
+            )
+            conn.commit()
 
     def load_budgets(self):
-        if not os.path.exists(self.budget_file):
-            return {}
-        with open(self.budget_file, "r") as file:
-            return json.load(file)
+        with self.connect() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM budgets")
+            return {row[0]: row[1] for row in cursor.fetchall()}
 
-    def save_budgets(self, budgets):
-        with open(self.budget_file, "w") as file:
-            json.dump(budgets, file, indent=4)
-
-    def get_balance(self, data):
-        return sum(t['amount'] for t in data)
-
-    def get_category_report(self, data):
-        report = {}
-        for t in data:
-            cat = t['category']
-            report[cat] = report.get(cat, 0) + t['amount']
-        return report
-
-    def export_to_csv(self, data):
-        if not data: return False
-        filename = "extrato_financeiro.csv"
-        fields = ["date", "description", "category", "amount"]
-        try:
-            with open(filename, "w", newline="", encoding="utf-8-sig") as file:
-                writer = csv.DictWriter(file, fieldnames=fields, delimiter=";")
-                writer.writeheader()
-                writer.writerows(data)
-            return filename
-        except Exception:
-            return False
+    def get_category_report(self):
+        with self.connect() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT category, SUM(amount) FROM transactions GROUP BY category")
+            return {row[0]: row[1] for row in cursor.fetchall()}
