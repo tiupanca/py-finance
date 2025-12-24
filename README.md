@@ -1,87 +1,66 @@
-# 💰 PyFinance - Gerenciador de Finanças Pessoais
+# 💰 PyFinance Pro - Dashboard Financeiro Inteligente
 
-O **PyFinance** é uma aplicação de linha de comando (CLI) desenvolvida em Python para auxiliar no controle financeiro diário. O projeto permite registrar receitas e despesas, visualizar o saldo total e manter um histórico persistente através de arquivos JSON.
-
-Este projeto foi construído para demonstrar conceitos fundamentais de lógica de programação, manipulação de arquivos e estruturação de software de forma limpa e organizada.
+O **PyFinance** evoluiu de um simples script de terminal para uma aplicação web completa. É uma ferramenta de gestão financeira que permite o controle total de gastos, receitas e definição de metas orçamentárias, utilizando uma arquitetura profissional e visualização de dados moderna.
 
 ---
 
-## ✨ Funcionalidades
+## ✨ Funcionalidades (v7.0)
 
-- **Registro de Movimentações:** Adicione entradas (valores positivos) e saídas (valores negativos) com descrição e categoria.
-- **Cálculo de Saldo em Tempo Real:** Monitoramento constante do status financeiro (com alertas visuais caso o saldo esteja negativo).
-- **Persistência de Dados:** Todos os dados são salvos em um arquivo `json`, permitindo que as informações sejam mantidas mesmo após fechar o programa.
-- **Listagem Detalhada:** Interface limpa para visualizar o histórico de transações categorizadas.
+* **Interface Web Interativa:** Dashboard moderno desenvolvido com Streamlit para uma experiência de usuário fluida e visual.
+* **Visualização de Dados:** Gráficos dinâmicos e interativos que mostram a distribuição de gastos por categoria.
+* **Gestão de Metas (Budgets):** Definição de limites mensais com barras de progresso que mostram o consumo do orçamento em tempo real.
+* **Sistema CRUD Completo:** Capacidade de Adicionar, Listar, Editar e Excluir transações de forma simples.
+* **Exportação de Relatórios:** Geração de arquivos CSV formatados especificamente para abertura no Microsoft Excel ou Google Sheets.
+* **Arquitetura Profissional:** Construído com Programação Orientada a Objetos (POO), facilitando a manutenção e futuras expansões.
 
-## ✨ Funcionalidades (v2.0)
+---
 
-- **Interface Colorida:** Uso da biblioteca `colorama` para feedback visual (Verde para receitas, Vermelho para despesas).
-- **Data e Hora Automática:** Registro preciso de quando cada transação foi realizada.
-- **Registro de Movimentações:** Adicione entradas e saídas com descrição e categoria.
-- **Persistência de Dados:** Histórico salvo em JSON.
+## 🏗️ Estrutura do Software
 
-## ✨ Funcionalidades (v3.0 - Full CRUD)
+O projeto foi organizado seguindo o princípio de separação de responsabilidades:
 
-- **[C]reate:** Adição de transações com data automática e categorias.
-- **[R]ead:** Visualização de histórico detalhado e relatórios por categoria.
-- **[U]pdate:** Edição inteligente de registros existentes (com preservação de dados).
-- **[D]elete:** Remoção de registros por ID.
-- **Feedback Visual:** Interface colorida com `colorama` para melhor legibilidade.
-- **Persistência Local:** Armazenamento robusto em JSON.
-- **Exportação de Dados:** Gera arquivos `.csv` formatados para abertura direta no Microsoft Excel ou Google Sheets (v5.0).
+1. **database.py**: O cérebro do projeto. Contém a classe `FinanceDatabase` que gerencia a persistência de dados em arquivos JSON e os cálculos matemáticos.
+2. **app.py**: A face do projeto. Gerencia a interface web, os gráficos e a interação direta com o usuário.
+3. **finance.py**: Versão clássica via terminal, mantida para testes e operações rápidas via linha de comando.
 
-## 🛠️ Tecnologias Utilizadas
+---
 
-- **Linguagem:** [Python 3.10+](https://www.python.org/)
-- **Armazenamento:** JSON (JavaScript Object Notation)
-- **Bibliotecas Nativas:** `json` (manipulação de dados) e `os` (interação com o sistema operacional)
+## 🛠️ Tecnologias e Ferramentas
 
-## 🏗️ Arquitetura do Projeto
+* **Linguagem:** Python 3.10+
+* **Framework Web:** Streamlit
+* **Bibliotecas de Dados:** Pandas e Plotly
+* **Estilização:** Colorama (para a versão terminal)
+* **Armazenamento:** JSON (Banco de dados local em formato de arquivo)
 
-O sistema foi refatorado seguindo princípios de **Separação de Responsabilidades**:
-- `finance.py`: Camada de Interface (View) - Lida com a interação com o usuário.
-- `database.py`: Camada de Dados (Model) - Lida com leitura, escrita e lógica de cálculo.
+---
 
+## 📦 Como Instalar e Executar
 
-**23/12/2025: (v4.0)**
+Siga os passos abaixo para rodar o projeto na sua máquina:
 
-Implementação de Programação Orientada a Objetos (POO) para maior escalabilidade e organização.
+### 1. Clonar o Repositório
+Baixe os arquivos do projeto para sua máquina local através do Git.
 
-## 📦 Como Rodar o Projeto
+### 2. Instalar as Dependências
+Você precisará das bibliotecas básicas. No terminal, execute:
+pip install streamlit pandas plotly colorama
 
-Siga os passos abaixo para executar a aplicação em sua máquina local:
+### 3. Executar a Aplicação
+Para iniciar o servidor web do projeto, utilize o comando:
+**streamlit run app.py**
 
-1. **Certifique-se de ter o Python instalado:**
-   Você pode verificar digitando `python --version` no seu terminal.
+### 4. Acessar o Sistema
+O Dashboard abrirá automaticamente no seu navegador padrão (geralmente em http://localhost:8501).
 
-2. **Clone este repositório:**
-   
-   `git clone https://github.com/tiupanca/py-finance.git`
+---
 
+## 🚀 Próximos Passos no Desenvolvimento
 
-3. **Acesse a pasta do projeto:**
-   
-   `cd py-finance`
-
-4. **Instale as dependências:**
-
-    `pip install colorama`
-
-5. **Execute o programa:**
-   
-   `python finance.py`
-
-## 🧠 Aprendizados e Desafios
-
-Durante o desenvolvimento deste projeto, apliquei boas práticas de desenvolvimento:
-
-- **Modularização:**  Código dividido em funções específicas, facilitando a manutenção.
-- **Tratamento de Erros:**  Uso de blocos try/except para lidar com entradas inválidas.
-- **Trabalho com JSON:**  Conversão de dados Python para persistência local.
-- **Git & GitHub:**  Fluxo de trabalho com commits organizados e README profissional.
-- **Evolução de Software:** Como manter a compatibilidade de dados ao adicionar novas colunas em um sistema já existente.
-- **Experiência do Usuário (UX):** Uso de cores no terminal para facilitar a leitura de dados financeiros.
-- **Manipulação de Datas:** Uso da biblioteca `datetime` para formatação de logs.
+- [ ] Implementação de sistema de login e proteção de dados por usuário.
+- [ ] Migração do sistema de arquivos JSON para um banco de dados SQL (SQLite).
+- [ ] Criação de filtros inteligentes por datas e períodos específicos.
+- [ ] Integração com inteligência artificial para previsão de gastos futuros.
 
 ## 👤 Autor
 
