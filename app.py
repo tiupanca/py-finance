@@ -43,17 +43,17 @@ if menu == "Painel Geral":
         c1, c2 = st.columns(2)
         
         with c1:
-            st.write("### Gastos por Categoria")
-            # Gráfico apenas com valores negativos (despesas)
-            df_gastos = df[df['amount'] < 0].copy()
-            df_gastos['abs_amount'] = df_gastos['amount'].abs()
-            fig = px.pie(df_gastos, values='abs_amount', names='category', hole=.3)
+            st.write("### Distribuição por Categoria")
+            # Agora mostra o valor absoluto de tudo, para o gráfico não bugar com negativos
+            df_visual = df.copy()
+            df_visual['abs_amount'] = df_visual['amount'].abs()
+            fig = px.pie(df_visual, values='abs_amount', names='category', hole=.3)
             st.plotly_chart(fig)
             
         with c2:
             st.write("### Histórico Recente (SQL)")
             # Exibe a tabela vinda do banco de dados
-            st.dataframe(df, use_container_width=True)
+            st.dataframe(df, width="stretch")
 
 # --- LÓGICA DE ADICIONAR ---
 elif menu == "Adicionar Transação":
